@@ -4,10 +4,10 @@
 
 Adafruit_MPU6050 mpu;
 
-// Định nghĩa chân cho các nút
-const int buttonPin = D3; // Chân của nút
+// Define pin for the button
+const int buttonPin = D3; // Pin for the button
 
-// Định nghĩa các biến cho sai số không bằng không
+// Define variables for the zero-offset error
 double offsetX, offsetY, offsetZ;
 
 void calibrateGyro()
@@ -24,7 +24,7 @@ void calibrateGyro()
 
 void setup()
 {
-  Serial.begin(115200); // Đặt baudrate
+  Serial.begin(115200); // Set baud rate
   if (!mpu.begin())
   {
     Serial.println("Failed to find MPU6050 sensor");
@@ -33,11 +33,11 @@ void setup()
   }
   Serial.println("MPU6050 initialized");
 
-  // Thực hiện hiệu chỉnh cảm biến
+  // Perform sensor calibration
   calibrateGyro();
 
-  // Cài đặt chân nút
-  pinMode(buttonPin, INPUT_PULLUP); // Sử dụng pull-up nội bộ
+  // Set up button pin
+  pinMode(buttonPin, INPUT_PULLUP); // Use internal pull-up
 }
 
 void loop()
@@ -45,15 +45,15 @@ void loop()
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
 
-  // Điều chỉnh dữ liệu con quay hồi chuyển dựa trên sai số không bằng không
+  // Adjust gyro data based on zero-offset error
   double x = g.gyro.x - offsetX;
   double y = g.gyro.y - offsetY;
   double z = g.gyro.z - offsetZ;
 
-  // Đọc trạng thái của nút
+  // Read the button state
   int buttonState = digitalRead(buttonPin);
 
-  // Gửi dữ liệu gia tốc, con quay hồi chuyển và trạng thái nút dưới dạng văn bản ASCII
+  // Send acceleration, gyro data, and button state as ASCII text
   // Serial.print("DATAL,");
   // Serial.print(a.acceleration.x);
   // Serial.print(",");
